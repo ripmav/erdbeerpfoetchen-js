@@ -27,7 +27,7 @@ window.addEventListener('onWidgetLoad', (evt) => {
     streamerName: fields.streamerName ?? '',
     collectionType: fields.collectionType ?? 'default',
   });
-});
+}, { once: true });
 
 window.addEventListener('onSessionUpdate', () => {
   // optional: react to session data
