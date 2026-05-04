@@ -84,7 +84,7 @@ window.addEventListener('onSessionUpdate', (obj) => { /* optional: react to sess
 | T6 | GitHub Actions: build+bundle workflow (tag-triggered) | x | §C,V7 |
 | T7 | README with embed instructions | x | §I |
 | T8 | fix client: `res.ok` check, `encodeURIComponent` streamerName, AbortController timeout | x | V9,V10,V13 |
-| T9 | fix client: `readCollection` error → throw, ⊥ `undefined` | . | V12 |
+| T9 | fix client: `readCollection` error → throw, ⊥ `undefined` | x | V12 |
 | T10 | fix widget: `onWidgetLoad` `{once:true}` | . | V11 |
 
 ## §B Bugs

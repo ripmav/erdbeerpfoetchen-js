@@ -63,7 +63,7 @@ export class PfoetckenClientImpl implements PfoetckenClient {
       return (await res.json()) as unknown;
     } catch (err) {
       console.error('[erdbeerpfoetchen] readCollection failed:', err);
-      return undefined;
+      throw err;
     } finally {
       clearTimeout(timer);
     }
