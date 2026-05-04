@@ -71,13 +71,13 @@ window.addEventListener('onSessionUpdate', (obj) => { /* optional: react to sess
 
 | id | task | status | cites |
 |----|------|--------|-------|
-| T1 | TypeScript project scaffold (tsconfig, package.json, eslint config) | . | §C |
-| T2 | API client implementation (`PfoetckenClient`) | . | §I,V1,V2,V3,V4 |
-| T3 | StreamElements widget wrapper (lifecycle hooks, field injection) | . | §I,V1,V2 |
-| T4 | Bundle config (esbuild or rollup → single IIFE file) | . | §C,V5 |
-| T5 | GitHub Actions: lint workflow | . | §C,V6,V7 |
-| T6 | GitHub Actions: build+bundle workflow (tag-triggered) | . | §C,V7 |
-| T7 | README with embed instructions | . | §I |
+| T1 | TypeScript project scaffold (tsconfig, package.json, eslint config) | x | §C |
+| T2 | API client implementation (`PfoetckenClient`) | x | §I,V1,V2,V3,V4 |
+| T3 | StreamElements widget wrapper (lifecycle hooks, field injection) | x | §I,V1,V2 |
+| T4 | Bundle config (esbuild or rollup → single IIFE file) | x | §C,V5 |
+| T5 | GitHub Actions: lint workflow | x | §C,V6,V7 |
+| T6 | GitHub Actions: build+bundle workflow (tag-triggered) | x | §C,V7 |
+| T7 | README with embed instructions | x | §I |
 
 ## §B Bugs
 
