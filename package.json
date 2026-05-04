@@ -1,0 +1,16 @@
+{
+  "name": "erdbeerpfoetchen-js",
+  "version": "0.1.0",
+  "description": "StreamElements embed interface for the erdbeerpfoetchen API",
+  "type": "module",
+  "scripts": {
+    "lint": "tsc --noEmit && eslint .",
+    "build": "esbuild src/index.ts --bundle --format=iife --outfile=dist/erdbeerpfoetchen.js --target=es2020"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "eslint": "^9.0.0",
+    "typescript": "^5.0.0",
+    "typescript-eslint": "^8.0.0"
+  }
+}

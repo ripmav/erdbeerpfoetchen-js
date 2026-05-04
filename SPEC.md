@@ -66,20 +66,33 @@ window.addEventListener('onSessionUpdate', (obj) => { /* optional: react to sess
 - ESLint must pass with zero errors before merge (enforced in CI)
 - Build workflow only triggers on git tag push (`v*`)
 - Lint workflow triggers on every push and pull_request
+- V9: ∀ HTTP res → check `res.ok`; non-2xx → log error, ⊥ treat as success or parse body
+- V10: `streamerName` ! `encodeURIComponent`'d before URL interpolation
+- V11: `onWidgetLoad` ! registered `{once:true}` — ⊥ multiple handler registrations
+- V12: `readCollection` network/fetch error → thrown | typed signal; ⊥ `undefined` (indistinguishable from empty)
+- V13: ∀ fetch ! `AbortController` w/ configurable timeout; abort → log + return gracefully
 
 ## §T Tasks
 
 | id | task | status | cites |
 |----|------|--------|-------|
-| T1 | TypeScript project scaffold (tsconfig, package.json, eslint config) | . | §C |
-| T2 | API client implementation (`PfoetckenClient`) | . | §I,V1,V2,V3,V4 |
-| T3 | StreamElements widget wrapper (lifecycle hooks, field injection) | . | §I,V1,V2 |
-| T4 | Bundle config (esbuild or rollup → single IIFE file) | . | §C,V5 |
-| T5 | GitHub Actions: lint workflow | . | §C,V6,V7 |
-| T6 | GitHub Actions: build+bundle workflow (tag-triggered) | . | §C,V7 |
-| T7 | README with embed instructions | . | §I |
+| T1 | TypeScript project scaffold (tsconfig, package.json, eslint config) | x | §C |
+| T2 | API client implementation (`PfoetckenClient`) | x | §I,V1,V2,V3,V4 |
+| T3 | StreamElements widget wrapper (lifecycle hooks, field injection) | x | §I,V1,V2 |
+| T4 | Bundle config (esbuild or rollup → single IIFE file) | x | §C,V5 |
+| T5 | GitHub Actions: lint workflow | x | §C,V6,V7 |
+| T6 | GitHub Actions: build+bundle workflow (tag-triggered) | x | §C,V7 |
+| T7 | README with embed instructions | x | §I |
+| T8 | fix client: `res.ok` check, `encodeURIComponent` streamerName, AbortController timeout | x | V9,V10,V13 |
+| T9 | fix client: `readCollection` error → throw, ⊥ `undefined` | x | V12 |
+| T10 | fix widget: `onWidgetLoad` `{once:true}` | x | V11 |
 
 ## §B Bugs
 
 | id | date | cause | fix |
 |----|------|-------|-----|
+| B1 | 2026-05-04 | `writeCollection`+`readCollection` ⊥ check `res.ok` — HTTP 4xx/5xx treated as success; error body → `res.json()` unchecked (client.ts:20-33,40-48) | V9 |
+| B2 | 2026-05-04 | `streamerName` raw-interpolated in URL path — special chars (space,`/`) corrupt request (client.ts:18,38) | V10 |
+| B3 | 2026-05-04 | `readCollection` returns `undefined` on network error — caller ⊥ distinguish error from empty collection (client.ts:36-52) | V12 |
+| B4 | 2026-05-04 | `onWidgetLoad` registered w/o `{once:true}` — N firings → N listeners; `window.erdbeerpfoetchen` overwritten, in-flight reqs complete on stale config (index.ts:22) | V11 |
+| B5 | 2026-05-04 | no `AbortController` on fetch calls — hung req blocks indefinitely, no timeout logged (client.ts:20,40) | V13 |
