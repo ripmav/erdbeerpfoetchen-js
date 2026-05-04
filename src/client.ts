@@ -8,6 +8,7 @@ export interface ClientConfig {
   apiToken: string;
   streamerName: string;
   collectionType: string;
+  timeoutMs?: number;
 }
 
 export class PfoetckenClientImpl implements PfoetckenClient {
@@ -15,9 +16,11 @@ export class PfoetckenClientImpl implements PfoetckenClient {
 
   async writeCollection(userKey: string, collectionKey: string, data: unknown): Promise<void> {
     if (!this.guard('writeCollection')) return;
-    const url = `${this.config.apiBaseUrl}/api/v1/collection/${this.config.streamerName}`;
+    const url = `${this.config.apiBaseUrl}/api/v1/collection/${encodeURIComponent(this.config.streamerName)}`;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), this.config.timeoutMs ?? 10_000);
     try {
-      await fetch(url, {
+      const res = await fetch(url, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${this.config.apiToken}`,
@@ -27,15 +30,23 @@ export class PfoetckenClientImpl implements PfoetckenClient {
           'X-COLLECTION-TYPE': this.config.collectionType,
         },
         body: JSON.stringify(data),
+        signal: controller.signal,
       });
+      if (!res.ok) {
+        console.error(`[erdbeerpfoetchen] writeCollection HTTP ${res.status}`);
+      }
     } catch (err) {
       console.error('[erdbeerpfoetchen] writeCollection failed:', err);
+    } finally {
+      clearTimeout(timer);
     }
   }
 
   async readCollection(userKey: string, collectionKey: string): Promise<unknown> {
     if (!this.guard('readCollection')) return undefined;
-    const url = `${this.config.apiBaseUrl}/api/v1/collection/${this.config.streamerName}`;
+    const url = `${this.config.apiBaseUrl}/api/v1/collection/${encodeURIComponent(this.config.streamerName)}`;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), this.config.timeoutMs ?? 10_000);
     try {
       const res = await fetch(url, {
         method: 'GET',
@@ -44,11 +55,17 @@ export class PfoetckenClientImpl implements PfoetckenClient {
           'X-USER-KEY': userKey,
           'X-COLLECTION-KEY': collectionKey,
         },
+        signal: controller.signal,
       });
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
       return (await res.json()) as unknown;
     } catch (err) {
       console.error('[erdbeerpfoetchen] readCollection failed:', err);
       return undefined;
+    } finally {
+      clearTimeout(timer);
     }
   }
 
